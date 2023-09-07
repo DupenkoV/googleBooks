@@ -1,7 +1,5 @@
 import { Outlet } from 'react-router-dom';
-import { InputBookName } from '../InputBookName';
-import { SelectCategory } from '../SelectCategory';
-import { Form } from 'antd';
+import { SearchBooks } from '../SearchBooks';
 
 export const Layout = () => {
   return (
@@ -15,10 +13,7 @@ export const Layout = () => {
           backgroundColor: 'grey',
           padding: '150px',
         }}>
-        <Form>
-          <InputBookName />
-          <SelectCategory />
-        </Form>
+        <SearchBooks />
       </header>
       <Outlet />
     </>

@@ -1,7 +1,6 @@
 import { Card, Image } from 'antd';
 import React from 'react';
 import { BooksDto } from '../../types';
-import { Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { useAppDispatch } from '../../hooks/reduxHooks';
 import { addBookInfo } from '../../slices/bookSlice';

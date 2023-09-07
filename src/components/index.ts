@@ -4,6 +4,5 @@ export * from './container';
 export * from './BookList';
 export * from './Details';
 export * from './Layout';
-export * from './InputBookName';
 export * from './PaginationButton';
-export * from './SelectCategory';
+export * from './SearchBooks';

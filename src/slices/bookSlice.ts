@@ -19,25 +19,45 @@ const initialState: StateProps = {
 };
 
 interface FetchBooksArg {
-  bookName: string;
+  searchBook?: searchBook;
   booksNumber: number;
   isSearch: boolean;
+  bookName?: string;
+}
+
+interface searchBook {
+  sorting: string;
+  bookName: string;
+  category: string[];
 }
 
 export const fetchBooks = createAsyncThunk(
   '@@books/fetchBooks',
-  async ({ bookName, booksNumber, isSearch }: FetchBooksArg) => {
-    const response = await fetch(
-      `https://www.googleapis.com/books/v1/volumes?q=${bookName}&maxResults=30&startIndex=${
-        isSearch ? 0 : booksNumber
-      }`
-    )
-      .then(res => res.json())
-      .then(data => {
-        return data;
-      });
-    console.log(response);
-    return { response, isSearch };
+  async ({ searchBook, booksNumber, isSearch, bookName }: FetchBooksArg) => {
+    if (searchBook) {
+      const { sorting, bookName, category } = searchBook;
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${bookName}+subject:${category.join()}&maxResults=30&startIndex=${
+          isSearch ? 0 : booksNumber
+        }&orderBy=${sorting}`
+      )
+        .then(res => res.json())
+        .then(data => {
+          return data;
+        });
+      return { response, isSearch };
+    } else {
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${bookName}&maxResults=30&startIndex=${
+          isSearch ? 0 : booksNumber
+        }`
+      )
+        .then(res => res.json())
+        .then(data => {
+          return data;
+        });
+      return { response, isSearch };
+    }
   }
 );
 
