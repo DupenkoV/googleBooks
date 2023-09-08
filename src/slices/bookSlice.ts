@@ -1,14 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { BooksDto } from '../types';
+import { FetchBooksArg, StateProps } from '../types';
 import { addBooks } from './utilits';
-
-interface StateProps {
-  totalItems: number;
-  booksList: BooksDto[];
-  bookInfo: BooksDto | null;
-  loading: boolean;
-  bookName: string;
-}
+import { creatingUrl } from './utilits';
 
 const initialState: StateProps = {
   totalItems: 0,
@@ -18,49 +11,21 @@ const initialState: StateProps = {
   bookName: '',
 };
 
-interface FetchBooksArg {
-  searchBook?: searchBook;
-  booksNumber: number;
-  isSearch: boolean;
-  bookName?: string;
-}
-
-interface searchBook {
-  sorting: string;
-  bookName: string;
-  category: string[];
-}
+//Запрос списка книг по условиям поиска. Реализации корявая, нарушается принцип DRY. буду переделывать, сейчас не успеваю дописать утилиту.
 
 export const fetchBooks = createAsyncThunk(
   '@@books/fetchBooks',
-  async ({ searchBook, booksNumber, isSearch, bookName }: FetchBooksArg) => {
-    if (searchBook) {
-      const { sorting, bookName, category } = searchBook;
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${bookName}+subject:${category.join()}&maxResults=30&startIndex=${
-          isSearch ? 0 : booksNumber
-        }&orderBy=${sorting}`
-      )
-        .then(res => res.json())
-        .then(data => {
-          return data;
-        });
-      return { response, isSearch };
-    } else {
-      const response = await fetch(
-        `https://www.googleapis.com/books/v1/volumes?q=${bookName}&maxResults=30&startIndex=${
-          isSearch ? 0 : booksNumber
-        }`
-      )
-        .then(res => res.json())
-        .then(data => {
-          return data;
-        });
-      return { response, isSearch };
-    }
+  async ({ searchBook, booksNumber, isSearch }: FetchBooksArg) => {
+    const response = await fetch(creatingUrl(searchBook, isSearch, booksNumber))
+      .then(res => res.json())
+      .then(data => {
+        return data;
+      });
+    return { response, isSearch };
   }
 );
 
+// Запрос детализации книги из API.
 export const fetchBook = createAsyncThunk(
   '@@books/fetchBook',
   async (bookId: string) => {
@@ -71,7 +36,6 @@ export const fetchBook = createAsyncThunk(
       .then(data => {
         return data.volumeInfo;
       });
-
     return {
       id: bookId,
       bookCover: response.imageLinks
@@ -85,15 +49,17 @@ export const fetchBook = createAsyncThunk(
   }
 );
 
+//С обработкой ошибок тоже не успел. Необходимо добавлять в rejected информацию о действиях в случае отсутствия ответа от сервера. Также как и дял состояния pending. Завел в store loading, а дописать не успел.
+
 const bookSlice = createSlice({
   name: '@@books',
   initialState,
   reducers: {
     addBookInfo: (state, action) => {
-      state.bookInfo = state.booksList.find(item => item.id === action.payload);
+      state.bookInfo = state.booksList.find(item => item.id === action.payload); //Добавление информации о книги из store, если она там есть. Чтобы не делать лишние запросы из API.
     },
     addBookName: (state, action) => {
-      state.bookName = action.payload;
+      state.bookName = action.payload; // Добавление объекта с информацией из запроса (сортировка, категории, нейминг запроса). Необходимая информация для пагинации, а, также, возможного будущего расширения приложения.
     },
   },
   extraReducers: builder => {

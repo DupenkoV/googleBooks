@@ -3,6 +3,8 @@ import { useAppDispatch } from '../../hooks/reduxHooks';
 import { addBookName, fetchBooks } from '../../slices/bookSlice';
 import { categorySelectOptions, sortingSelectOptions } from './constants';
 
+//Форма запроса книг. Использую неконтролируемый компонент, т.к., в дальнейшем, при расширении, форма разрастется и намного удобнее работать в больших формах неконтролируемых.
+
 export const SearchBooks: React.FC = () => {
   const [form] = Form.useForm();
   const dispatch = useAppDispatch();
@@ -11,7 +13,7 @@ export const SearchBooks: React.FC = () => {
       form={form}
       name="search"
       onFinish={value => {
-        dispatch(addBookName(value.bookName));
+        dispatch(addBookName(value));
         dispatch(
           fetchBooks({ searchBook: value, booksNumber: 0, isSearch: true })
         );

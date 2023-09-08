@@ -3,13 +3,13 @@ import { BookCard, PaginationButton } from '../index';
 import { BooksDto } from '../../types';
 
 /**
- * Компонент отвечает за каталог карточек с книгами и get запрос книг с "бэка".
+ * Компонент отвечает за рэндэр каталог карточек с книгами.
  */
 
 export const BooksList = () => {
   const books = useAppSelector(state => state.books.booksList);
   const totalItems = useAppSelector(state => state.books.totalItems);
-  console.log(books);
+
   const find =
     books.length > 0 ? (
       <div>Всего найдено {totalItems} книг</div>
