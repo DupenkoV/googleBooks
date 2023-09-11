@@ -12,9 +12,9 @@ export const BooksList = () => {
 
   const find =
     books.length > 0 ? (
-      <div>Всего найдено {totalItems} книг</div>
+      <div style={{ margin: '20px' }}>Всего найдено {totalItems} книг</div>
     ) : (
-      `Сделайте запрос выше`
+      <div style={{ margin: '20px' }}>Сделайте запрос выше</div>
     );
 
   const button =

@@ -23,23 +23,26 @@ export const addBooks = booksArr => {
 
 export const creatingUrl = (searchBook, isSearch, booksNumber) => {
   const { bookName, sorting, category } = searchBook;
-  let finalURL = BASE_URL;
+  let finalURL = '';
   if (isSearch) {
     if (category.includes('all')) {
-      finalURL = finalURL + `${bookName}&maxResults=30&orderBy=${sorting}`;
+      finalURL = BASE_URL + `${bookName}&maxResults=30&orderBy=${sorting}`;
     } else {
       finalURL =
-        finalURL +
+        BASE_URL +
         `${bookName}+subject:${category.join(
           ' '
         )}&maxResults=30&orderBy=${sorting}`;
     }
   } else {
     if (category.includes('all')) {
-      finalURL = `https://www.googleapis.com/books/v1/volumes?q=${bookName}&maxResults=30&startIndex=${booksNumber}&orderBy=${sorting}`;
-    } else {
       finalURL =
-        finalURL = `https://www.googleapis.com/books/v1/volumes?q=${bookName}+subject:${category.join(
+        BASE_URL +
+        `${bookName}&maxResults=30&startIndex=${booksNumber}&orderBy=${sorting}`;
+    } else {
+      finalURL = finalURL =
+        BASE_URL +
+        `${bookName}+subject:${category.join(
           ' '
         )}&maxResults=30&startIndex=${booksNumber}&orderBy=${sorting}`;
     }

@@ -9,13 +9,15 @@ export const PaginationButton: React.FC = () => {
   const booksNumber = useAppSelector(state => state.books.booksList.length);
 
   return (
-    <Button
-      type="primary"
-      loading={false}
-      onClick={() =>
-        dispatch(fetchBooks({ searchBook, booksNumber, isSearch: false }))
-      }>
-      Загрузить больше
-    </Button>
+    <div style={{ marginTop: '20px' }}>
+      <Button
+        type="primary"
+        loading={false}
+        onClick={() =>
+          dispatch(fetchBooks({ searchBook, booksNumber, isSearch: false }))
+        }>
+        Загрузить больше
+      </Button>
+    </div>
   );
 };
